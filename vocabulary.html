@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Namromah - Từ vựng THPT</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f6f7fb;
+  color: #171827;
+}
+
+.container {
+  max-width: 560px;
+  margin: auto;
+  padding: 20px 16px 40px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 27px;
+}
+
+.header p {
+  margin: 5px 0 0;
+  color: #777b8e;
+}
+
+.back {
+  border: 0;
+  background: white;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  font-size: 20px;
+}
+
+.search {
+  width: 100%;
+  padding: 15px 17px;
+  border: 1px solid #e3e5ee;
+  border-radius: 16px;
+  font-size: 16px;
+  outline: none;
+  margin-bottom: 15px;
+}
+
+.search:focus {
+  border-color: #6c5ce7;
+}
+
+.categories {
+  display: flex;
+  gap: 9px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-bottom: 18px;
+}
+
+.category {
+  white-space: nowrap;
+  border: 0;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: white;
+  color: #55586a;
+  font-size: 14px;
+}
+
+.category.active {
+  background: #6c5ce7;
+  color: white;
+}
+
+.count {
+  color: #777b8e;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.word-card {
+  background: white;
+  border-radius: 20px;
+  padding: 18px;
+  margin-bottom: 12px;
+  box-shadow: 0 3px 15px rgba(0,0,0,.04);
+}
+
+.word-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.word {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.type {
+  color: #6c5ce7;
+  background: #f0edff;
+  padding: 5px 9px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.meaning {
+  margin-top: 8px;
+  font-size: 16px;
+}
+
+.example {
+  margin-top: 10px;
+  padding: 11px;
+  background: #f7f7fb;
+  border-radius: 12px;
+  color: #55586a;
+  font-size: 14px;
+}
+
+.family {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.family strong {
+  color: #6c5ce7;
+}
+
+.empty {
+  text-align: center;
+  padding: 40px 10px;
+  color: #777b8e;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div>
+      <h1>📚 Từ vựng THPT</h1>
+      <p>Học từ theo chủ đề</p>
+    </div>
+
+    <button class="back" onclick="history.back()">←</button>
+  </div>
+
+  <input
+    id="search"
+    class="search"
+    type="text"
+    placeholder="🔍 Tìm từ vựng..."
+    oninput="renderWords()"
+  >
+
+  <div class="categories" id="categories"></div>
+
+  <div class="count" id="count"></div>
+
+  <div id="wordList"></div>
+
+</div>
+
+<script>
+
+const words = [
+
+/* ================= EDUCATION ================= */
+
+{
+  word: "education",
+  type: "n.",
+  meaning: "giáo dục",
+  topic: "Education",
+  example: "Education plays an important role in society.",
+  family: "educate (v.) · educational (adj.) · educator (n.)"
+},
+
+{
+  word: "academic",
+  type: "adj.",
+  meaning: "thuộc học thuật",
+  topic: "Education",
+  example: "Students need good academic skills.",
+  family: "academically (adv.) · academy (n.)"
+},
+
+{
+  word: "achievement",
+  type: "n.",
+  meaning: "thành tựu, thành tích",
+  topic: "Education",
+  example: "Winning the competition was a great achievement.",
+  family: "achieve (v.) · achievable (adj.)"
+},
+
+{
+  word: "scholarship",
+  type: "n.",
+  meaning: "học bổng",
+  topic: "Education",
+  example: "She received a scholarship to study abroad.",
+  family: "scholar (n.) · scholarly (adj.)"
+},
+
+{
+  word: "curriculum",
+  type: "n.",
+  meaning: "chương trình học",
+  topic: "Education",
+  example: "The school has introduced a new curriculum.",
+  family: "curricular (adj.)"
+},
+
+/* ================= ENVIRONMENT ================= */
+
+{
+  word: "environment",
+  type: "n.",
+  meaning: "môi trường",
+  topic: "Environment",
+  example: "We must protect the environment.",
+  family: "environmental (adj.) · environmentally (adv.)"
+},
+
+{
+  word: "pollution",
+  type: "n.",
+  meaning: "sự ô nhiễm",
+  topic: "Environment",
+  example: "Air pollution is a serious problem.",
+  family: "pollute (v.) · polluted (adj.) · pollutant (n.)"
+},
+
+{
+  word: "conservation",
+  type: "n.",
+  meaning: "sự bảo tồn",
+  topic: "Environment",
+  example: "Wildlife conservation is essential.",
+  family: "conserve (v.) · conservative (adj.)"
+},
+
+{
+  word: "sustainable",
+  type: "adj.",
+  meaning: "bền vững",
+  topic: "Environment",
+  example: "We need sustainable development.",
+  family: "sustain (v.) · sustainability (n.) · sustainably (adv.)"
+},
+
+{
+  word: "biodiversity",
+  type: "n.",
+  meaning: "đa dạng sinh học",
+  topic: "Environment",
+  example: "The forest has rich biodiversity.",
+  family: "biodiverse (adj.)"
+},
+
+/* ================= TECHNOLOGY ================= */
+
+{
+  word: "technology",
+  type: "n.",
+  meaning: "công nghệ",
+  topic: "Technology",
+  example: "Technology has changed the way we learn.",
+  family: "technological (adj.) · technologically (adv.)"
+},
+
+{
+  word: "innovation",
+  type: "n.",
+  meaning: "sự đổi mới",
+  topic: "Technology",
+  example: "Innovation can improve people's lives.",
+  family: "innovate (v.) · innovative (adj.) · innovatively (adv.)"
+},
+
+{
+  word: "digital",
+  type: "adj.",
+  meaning: "kỹ thuật số",
+  topic: "Technology",
+  example: "Many students use digital devices.",
+  family: "digitally (adv.) · digitize (v.)"
+},
+
+{
+  word: "device",
+  type: "n.",
+  meaning: "thiết bị",
+  topic: "Technology",
+  example: "A smartphone is a useful device.",
+  family: "devise (v.)"
+},
+
+{
+  word: "artificial",
+  type: "adj.",
+  meaning: "nhân tạo",
+  topic: "Technology",
+  example: "Artificial intelligence is developing rapidly.",
+  family: "artificially (adv.)"
+},
+
+/* ================= HEALTH ================= */
+
+{
+  word: "health",
+  type: "n.",
+  meaning: "sức khỏe",
+  topic: "Health",
+  example: "Regular exercise is good for your health.",
+  family: "healthy (adj.) · healthily (adv.)"
+},
+
+{
+  word: "nutrition",
+  type: "n.",
+  meaning: "dinh dưỡng",
+  topic: "Health",
+  example: "Good nutrition is important for children.",
+  family: "nutrient (n.) · nutritious (adj.) · nutritionally (adv.)"
+},
+
+{
+  word: "prevention",
+  type: "n.",
+  meaning: "sự phòng ngừa",
+  topic: "Health",
+  example: "Disease prevention is better than treatment.",
+  family: "prevent (v.) · preventive (adj.)"
+},
+
+{
+  word: "treatment",
+  type: "n.",
+  meaning: "sự điều trị",
+  topic: "Health",
+  example: "The patient needs medical treatment.",
+  family: "treat (v.) · treatable (adj.)"
+},
+
+{
+  word: "disease",
+  type: "n.",
+  meaning: "bệnh tật",
+  topic: "Health",
+  example: "Some diseases can be prevented.",
+  family: "diseased (adj.)"
+},
+
+/* ================= SOCIETY ================= */
+
+{
+  word: "society",
+  type: "n.",
+  meaning: "xã hội",
+  topic: "Society",
+  example: "Education benefits society.",
+  family: "social (adj.) · socially (adv.) · socialize (v.)"
+},
+
+{
+  word: "community",
+  type: "n.",
+  meaning: "cộng đồng",
+  topic: "Society",
+  example: "The community worked together.",
+  family: "communal (adj.) · communally (adv.)"
+},
+
+{
+  word: "equality",
+  type: "n.",
+  meaning: "sự bình đẳng",
+  topic: "Society",
+  example: "Everyone should have equal opportunities.",
+  family: "equal (adj.) · equally (adv.) · equalize (v.)"
+},
+
+{
+  word: "responsibility",
+  type: "n.",
+  meaning: "trách nhiệm",
+  topic: "Society",
+  example: "We all have a responsibility to help others.",
+  family: "responsible (adj.) · responsibly (adv.)"
+},
+
+{
+  word: "volunteer",
+  type: "v./n.",
+  meaning: "tình nguyện; tình nguyện viên",
+  topic: "Society",
+  example: "Many young people volunteer in their communities.",
+  family: "voluntary (adj.) · voluntarily (adv.)"
+},
+
+/* ================= JOBS ================= */
+
+{
+  word: "career",
+  type: "n.",
+  meaning: "sự nghiệp",
+  topic: "Jobs & Career",
+  example: "She wants to build a successful career.",
+  family: "career-related (adj.)"
+},
+
+{
+  word: "employment",
+  type: "n.",
+  meaning: "việc làm",
+  topic: "Jobs & Career",
+  example: "The company provides employment opportunities.",
+  family: "employ (v.) · employee (n.) · employer (n.) · unemployed (adj.)"
+},
+
+{
+  word: "qualification",
+  type: "n.",
+  meaning: "bằng cấp; trình độ",
+  topic: "Jobs & Career",
+  example: "You need the right qualifications for the job.",
+  family: "qualify (v.) · qualified (adj.)"
+},
+
+{
+  word: "professional",
+  type: "adj./n.",
+  meaning: "chuyên nghiệp; chuyên gia",
+  topic: "Jobs & Career",
+  example: "She is a highly professional teacher.",
+  family: "profession (n.) · professionally (adv.)"
+},
+
+{
+  word: "experience",
+  type: "n./v.",
+  meaning: "kinh nghiệm; trải nghiệm",
+  topic: "Jobs & Career",
+  example: "Work experience is useful when applying for a job.",
+  family: "experienced (adj.) · inexperienced (adj.)"
+},
+
+/* ================= SCIENCE ================= */
+
+{
+  word: "science",
+  type: "n.",
+  meaning: "khoa học",
+  topic: "Science",
+  example: "Science helps us understand the natural world.",
+  family: "scientist (n.) · scientific (adj.) · scientifically (adv.)"
+},
+
+{
+  word: "research",
+  type: "n./v.",
+  meaning: "nghiên cứu",
+  topic: "Science",
+  example: "Scientists conduct research on climate change.",
+  family: "researcher (n.) · research-based (adj.)"
+},
+
+{
+  word: "experiment",
+  type: "n./v.",
+  meaning: "thí nghiệm; thử nghiệm",
+  topic: "Science",
+  example: "The students conducted an experiment.",
+  family: "experimental (adj.) · experimentally (adv.)"
+},
+
+/* ================= GLOBALIZATION ================= */
+
+{
+  word: "globalization",
+  type: "n.",
+  meaning: "toàn cầu hóa",
+  topic: "Globalization",
+  example: "Globalization has connected countries.",
+  family: "globalize (v.) · global (adj.) · globally (adv.)"
+},
+
+{
+  word: "international",
+  type: "adj.",
+  meaning: "quốc tế",
+  topic: "Globalization",
+  example: "English is an international language.",
+  family: "internationally (adv.) · internationalization (n.)"
+},
+
+/* ================= MEDIA ================= */
+
+{
+  word: "communication",
+  type: "n.",
+  meaning: "sự giao tiếp",
+  topic: "Media",
+  example: "Good communication is important.",
+  family: "communicate (v.) · communicative (adj.) · communicatively (adv.)"
+},
+
+{
+  word: "information",
+  type: "n.",
+  meaning: "thông tin",
+  topic: "Media",
+  example: "We can find information online.",
+  family: "inform (v.) · informative (adj.) · informatively (adv.)"
+},
+
+/* ================= CULTURE ================= */
+
+{
+  word: "culture",
+  type: "n.",
+  meaning: "văn hóa",
+  topic: "Culture",
+  example: "Every country has its own culture.",
+  family: "cultural (adj.) · culturally (adv.)"
+},
+
+{
+  word: "tradition",
+  type: "n.",
+  meaning: "truyền thống",
+  topic: "Culture",
+  example: "The festival is an important tradition.",
+  family: "traditional (adj.) · traditionally (adv.)"
+},
+
+/* ================= TRAVEL ================= */
+
+{
+  word: "tourism",
+  type: "n.",
+  meaning: "du lịch",
+  topic: "Travel",
+  example: "Tourism creates many jobs.",
+  family: "tourist (n.) · touristic (adj.)"
+},
+
+{
+  word: "destination",
+  type: "n.",
+  meaning: "điểm đến",
+  topic: "Travel",
+  example: "Da Nang is a popular tourist destination.",
+  family: "destine (v.) · destined (adj.)"
+}
+
+];
+
+const topics = [
+  "All",
+  "Education",
+  "Environment",
+  "Technology",
+  "Health",
+  "Society",
+  "Jobs & Career",
+  "Science",
+  "Globalization",
+  "Media",
+  "Culture",
+  "Travel"
+];
+
+let currentTopic = "All";
+
+function renderCategories() {
+  const box = document.getElementById("categories");
+
+  box.innerHTML = topics.map(topic => `
+    <button
+      class="category ${topic === currentTopic ? "active" : ""}"
+      onclick="selectTopic('${topic}')">
+      ${topic === "All" ? "📚 Tất cả" : topic}
+    </button>
+  `).join("");
+}
+
+function selectTopic(topic) {
+  currentTopic = topic;
+  renderCategories();
+  renderWords();
+}
+
+function renderWords() {
+
+  const keyword =
+    document.getElementById("search").value
+    .toLowerCase()
+    .trim();
+
+  let filtered = words.filter(item => {
+
+    const matchesTopic =
+      currentTopic === "All" ||
+      item.topic === currentTopic;
+
+    const matchesSearch =
+      !keyword ||
+      item.word.toLowerCase().includes(keyword) ||
+      item.meaning.toLowerCase().includes(keyword);
+
+    return matchesTopic && matchesSearch;
+  });
+
+  document.getElementById("count").textContent =
+    `${filtered.length} từ vựng`;
+
+  const list = document.getElementById("wordList");
+
+  if (filtered.length === 0) {
+    list.innerHTML = `
+      <div class="empty">
+        Không tìm thấy từ phù hợp.
+      </div>
+    `;
+    return;
+  }
+
+  list.innerHTML = filtered.map(item => `
+    <div class="word-card">
+
+      <div class="word-top">
+        <div class="word">${item.word}</div>
+        <div class="type">${item.type}</div>
+      </div>
+
+      <div class="meaning">
+        ${item.meaning}
+      </div>
+
+      <div class="example">
+        📝 ${item.example}
+      </div>
+
+      <div class="family">
+        <strong>Word Family:</strong><br>
+        ${item.family}
+      </div>
+
+    </div>
+  `).join("");
+}
+
+renderCategories();
+renderWords();
+
+</script>
+
+</body>
+</html>
