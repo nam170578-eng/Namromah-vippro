@@ -1,9 +1,723 @@
-Namromah-vippro/
-├── index.html
-├── style.css
-├── app.js
-├── data/
-│   ├── vocabulary.js
-│   └── questions.js
-└── assets/
-    └── icons/
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#6c5ce7">
+  <title>Namromah THPT</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #6c5ce7;
+      --primary-dark: #5647d9;
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #171827;
+      --muted: #777b8e;
+      --border: #ececf3;
+      --green: #20b486;
+      --orange: #ff9f43;
+      --red: #ff6b6b;
+      --blue: #3b82f6;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    button {
+      font: inherit;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app {
+      max-width: 520px;
+      margin: auto;
+      min-height: 100vh;
+      background: var(--bg);
+      padding-bottom: 90px;
+    }
+
+    /* HEADER */
+
+    .header {
+      padding: 22px 18px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .hello {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .hello small {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .hello h1 {
+      font-size: 23px;
+      letter-spacing: -0.5px;
+    }
+
+    .profile {
+      width: 44px;
+      height: 44px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #6c5ce7, #8e7dff);
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 20px;
+      box-shadow: 0 8px 20px rgba(108, 92, 231, .22);
+    }
+
+    /* TARGET */
+
+    .target {
+      margin: 14px 18px;
+      padding: 19px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, #6556df, #7c6df0);
+      color: white;
+      box-shadow: 0 12px 30px rgba(108, 92, 231, .22);
+    }
+
+    .target-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .target-label {
+      opacity: .85;
+      font-size: 13px;
+    }
+
+    .target-score {
+      font-size: 31px;
+      font-weight: 800;
+      margin-top: 3px;
+    }
+
+    .target-badge {
+      padding: 7px 11px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.16);
+      font-size: 12px;
+    }
+
+    .progress {
+      margin-top: 15px;
+      height: 8px;
+      background: rgba(255,255,255,.2);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress span {
+      display: block;
+      width: 62%;
+      height: 100%;
+      background: white;
+      border-radius: inherit;
+    }
+
+    .target-bottom {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 9px;
+      font-size: 11px;
+      opacity: .82;
+    }
+
+    /* STATS */
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 4px 18px 18px;
+    }
+
+    .stat {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px 10px;
+      text-align: center;
+    }
+
+    .stat-icon {
+      font-size: 19px;
+      margin-bottom: 6px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 17px;
+    }
+
+    .stat small {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    /* SECTION */
+
+    .section {
+      padding: 0 18px;
+      margin-top: 7px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .section-title h2 {
+      font-size: 18px;
+    }
+
+    .section-title button {
+      background: transparent;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* QUICK ACTIONS */
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 11px;
+    }
+
+    .quick {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 17px;
+      text-align: left;
+      transition: .18s;
+    }
+
+    .quick:active {
+      transform: scale(.97);
+    }
+
+    .quick-icon {
+      width: 43px;
+      height: 43px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 21px;
+      margin-bottom: 12px;
+    }
+
+    .purple {
+      background: #eeeaff;
+    }
+
+    .blue {
+      background: #e8f1ff;
+    }
+
+    .green {
+      background: #e5f8f1;
+    }
+
+    .orange {
+      background: #fff1df;
+    }
+
+    .quick strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .quick small {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    /* CONTINUE */
+
+    .continue-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .continue-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: #eeeaff;
+      display: grid;
+      place-items: center;
+      font-size: 25px;
+      flex-shrink: 0;
+    }
+
+    .continue-info {
+      flex: 1;
+    }
+
+    .continue-info small {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .continue-info strong {
+      display: block;
+      font-size: 14px;
+      margin: 3px 0 8px;
+    }
+
+    .mini-progress {
+      height: 5px;
+      background: #eeeeF5;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .mini-progress span {
+      display: block;
+      width: 72%;
+      height: 100%;
+      background: var(--primary);
+    }
+
+    .continue-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 13px;
+      background: var(--primary);
+      color: white;
+      font-size: 17px;
+    }
+
+    /* VOCABULARY */
+
+    .topics {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+      scrollbar-width: none;
+    }
+
+    .topics::-webkit-scrollbar {
+      display: none;
+    }
+
+    .topic {
+      min-width: 135px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 19px;
+      padding: 15px;
+      flex-shrink: 0;
+    }
+
+    .topic-icon {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .topic strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .topic small {
+      color: var(--muted);
+      font-size: 10px;
+      display: block;
+      margin-top: 4px;
+    }
+
+    /* DAILY */
+
+    .daily {
+      margin-top: 15px;
+      background: #171827;
+      color: white;
+      border-radius: 22px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .daily-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 15px;
+      background: rgba(255,255,255,.1);
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+    }
+
+    .daily-info {
+      flex: 1;
+    }
+
+    .daily-info small {
+      opacity: .65;
+      font-size: 10px;
+    }
+
+    .daily-info strong {
+      display: block;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .daily-btn {
+      padding: 9px 12px;
+      border-radius: 11px;
+      background: white;
+      color: #171827;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* NAV */
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(520px, 100%);
+      background: rgba(255,255,255,.94);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
+      z-index: 20;
+    }
+
+    .nav-item {
+      background: transparent;
+      color: #9295a5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 5px;
+      font-size: 10px;
+    }
+
+    .nav-item span {
+      font-size: 21px;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    /* TOAST */
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 82px;
+      transform: translate(-50%, 20px);
+      background: #171827;
+      color: white;
+      padding: 11px 16px;
+      border-radius: 13px;
+      font-size: 12px;
+      opacity: 0;
+      pointer-events: none;
+      transition: .25s;
+      z-index: 50;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="hello">
+      <small>Chào mừng trở lại 👋</small>
+      <h1>Namromah THPT</h1>
+    </div>
+
+    <div class="profile">🎓</div>
+  </header>
+
+  <!-- TARGET -->
+  <section class="target">
+    <div class="target-top">
+      <div>
+        <div class="target-label">Mục tiêu của bạn</div>
+        <div class="target-score">8.0</div>
+      </div>
+
+      <div class="target-badge">THPT English</div>
+    </div>
+
+    <div class="progress">
+      <span></span>
+    </div>
+
+    <div class="target-bottom">
+      <span>Tiến độ ôn thi</span>
+      <span>62%</span>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats">
+
+    <div class="stat">
+      <div class="stat-icon">🔥</div>
+      <strong>7</strong>
+      <small>Ngày liên tiếp</small>
+    </div>
+
+    <div class="stat">
+      <div class="stat-icon">⚡</div>
+      <strong>1,240</strong>
+      <small>XP</small>
+    </div>
+
+    <div class="stat">
+      <div class="stat-icon">🏆</div>
+      <strong>Lv. 8</strong>
+      <small>Cấp độ</small>
+    </div>
+
+  </section>
+
+  <!-- QUICK -->
+  <section class="section">
+
+    <div class="section-title">
+      <h2>Hôm nay học gì?</h2>
+    </div>
+
+    <div class="quick-grid">
+
+      <button class="quick" onclick="openFeature('Luyện đề')">
+        <div class="quick-icon purple">📝</div>
+        <strong>Luyện đề</strong>
+        <small>Ôn thi THPT</small>
+      </button>
+
+      <button class="quick" onclick="openFeature('Từ vựng THPT')">
+        <div class="quick-icon blue">📚</div>
+        <strong>Từ vựng THPT</strong>
+        <small>2.000+ từ trọng tâm</small>
+      </button>
+
+      <button class="quick" onclick="openFeature('Flashcard')">
+        <div class="quick-icon green">🧠</div>
+        <strong>Flashcard</strong>
+        <small>Ôn từ đã học</small>
+      </button>
+
+      <button class="quick" onclick="openFeature('Reading')">
+        <div class="quick-icon orange">📖</div>
+        <strong>Reading</strong>
+        <small>Đọc hiểu</small>
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- CONTINUE -->
+  <section class="section" style="margin-top:22px">
+
+    <div class="section-title">
+      <h2>Học tiếp</h2>
+      <button onclick="openFeature('Lịch sử học')">Xem tất cả</button>
+    </div>
+
+    <div class="continue-card">
+
+      <div class="continue-icon">🌱</div>
+
+      <div class="continue-info">
+        <small>Từ vựng THPT • Chủ đề 01</small>
+        <strong>Environment & Climate</strong>
+
+        <div class="mini-progress">
+          <span></span>
+        </div>
+      </div>
+
+      <button class="continue-btn" onclick="openFeature('Environment & Climate')">
+        →
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- VOCAB -->
+  <section class="section" style="margin-top:22px">
+
+    <div class="section-title">
+      <h2>📚 Chủ đề từ vựng</h2>
+      <button onclick="openFeature('Tất cả chủ đề')">Xem tất cả</button>
+    </div>
+
+    <div class="topics">
+
+      <button class="topic" onclick="openFeature('Education')">
+        <div class="topic-icon">🎓</div>
+        <strong>Education</strong>
+        <small>120 từ</small>
+      </button>
+
+      <button class="topic" onclick="openFeature('Environment')">
+        <div class="topic-icon">🌱</div>
+        <strong>Environment</strong>
+        <small>100 từ</small>
+      </button>
+
+      <button class="topic" onclick="openFeature('Technology')">
+        <div class="topic-icon">💻</div>
+        <strong>Technology</strong>
+        <small>100 từ</small>
+      </button>
+
+      <button class="topic" onclick="openFeature('Health')">
+        <div class="topic-icon">❤️</div>
+        <strong>Health</strong>
+        <small>100 từ</small>
+      </button>
+
+      <button class="topic" onclick="openFeature('Society')">
+        <div class="topic-icon">👥</div>
+        <strong>Society</strong>
+        <small>100 từ</small>
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- DAILY -->
+  <section class="section">
+
+    <div class="daily">
+
+      <div class="daily-icon">🎯</div>
+
+      <div class="daily-info">
+        <small>NHIỆM VỤ HÔM NAY</small>
+        <strong>Học 20 từ + làm 10 câu</strong>
+      </div>
+
+      <button class="daily-btn" onclick="startDaily()">
+        Bắt đầu
+      </button>
+
+    </div>
+
+  </section>
+
+</div>
+
+<!-- BOTTOM NAV -->
+
+<nav class="bottom-nav">
+
+  <button class="nav-item active" onclick="navClick(this, 'Trang chủ')">
+    <span>⌂</span>
+    Trang chủ
+  </button>
+
+  <button class="nav-item" onclick="navClick(this, 'Luyện thi')">
+    <span>📝</span>
+    Luyện thi
+  </button>
+
+  <button class="nav-item" onclick="navClick(this, 'Từ vựng')">
+    <span>📚</span>
+    Từ vựng
+  </button>
+
+  <button class="nav-item" onclick="navClick(this, 'Thống kê')">
+    <span>📊</span>
+    Thống kê
+  </button>
+
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  function showToast(message) {
+    const toast = document.getElementById("toast");
+
+    toast.textContent = message;
+    toast.classList.add("show");
+
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 1800);
+  }
+
+  function openFeature(name) {
+    showToast(name + " sẽ được mở ở bước tiếp theo 🚀");
+  }
+
+  function navClick(button, name) {
+    document.querySelectorAll(".nav-item")
+      .forEach(item => item.classList.remove("active"));
+
+    button.classList.add("active");
+
+    showToast(name);
+  }
+
+  function startDaily() {
+    showToast("Bắt đầu nhiệm vụ hôm nay 🎯");
+  }
+</script>
+
+</body>
+</html>
